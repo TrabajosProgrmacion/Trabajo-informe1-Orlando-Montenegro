@@ -1,0 +1,228 @@
+Ejercicio en C 
+
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+class Producto {
+public:
+    string nombre;
+    double precio;
+    double cantidad;
+    string descripcion;
+
+    Producto(string nombre, double precio, double cantidad, string descripcion) : 
+        nombre(nombre), precio(precio), cantidad(cantidad), descripcion(descripcion) {}
+};
+
+class Pedido{
+};
+
+
+class GestorDeInventario {
+public:
+    Producto queso = Producto("queso", 5, 10, "lacteo");
+    Producto leche = Producto("leche", 3, 20, "lacteo");
+    Producto papaya = Producto("papaya", 2, 15, "fruta");
+
+    void comprar() {
+        cout << "Lista de productos disponibles:" << endl;
+        cout << "NOMBRE // PRECIO // CANTIDAD // DESCRIPCION" << endl;
+        mostrarProducto(queso);
+        mostrarProducto(leche);
+        mostrarProducto(papaya);
+
+        string nombre;
+        int cantidad;
+        cout << "Ingrese el nombre del producto que desea comprar: ";
+        cin >> nombre;
+        cout << "Ingrese la cantidad a comprar: ";
+        cin >> cantidad;
+
+        if (nombre == "queso" && queso.cantidad >= cantidad) {
+            queso.cantidad -= cantidad;
+            cout << "Se han vendido " << cantidad << " unidades de " << nombre << endl;
+        } 
+        else if (nombre == "leche" && leche.cantidad >= cantidad) {
+            leche.cantidad -= cantidad;
+            cout << "Se han vendido " << cantidad << " unidades de " << nombre << endl;
+        } 
+        else if (nombre == "papaya" && papaya.cantidad >= cantidad) {
+            papaya.cantidad -= cantidad;
+            cout << "Se han vendido " << cantidad << " unidades de " << nombre << endl;
+        } 
+        else {
+            cout << "No hay suficientes unidades de " << nombre << " en el inventario" << endl;
+        }
+    }
+
+    void vender(string nombre, double precio, double cantidad, string descripcion) {
+        if (nombre == "queso") {
+            queso.cantidad += cantidad;
+            cout << "Se han comprado " << cantidad << " unidades de " << nombre << endl;
+        } else if (nombre == "leche") {
+            leche.cantidad += cantidad;
+            cout << "Se han comprado " << cantidad << " unidades de " << nombre << endl;
+        } else if (nombre == "papaya") {
+            papaya.cantidad += cantidad;
+            cout << "Se han comprado " << cantidad << " unidades de " << nombre << endl;
+        } else {
+            Producto nuevoProducto = Producto(nombre, precio, cantidad, descripcion);
+            cout << "Se ha añadido " << cantidad << " unidades de " << nombre << " al inventario" << endl;
+        }
+    }
+
+    void mostrarProducto(Producto producto) {
+        cout << producto.nombre << " // " << producto.precio << " soles // " << producto.cantidad << " // " << producto.descripcion << endl;
+    }
+};
+
+class GeneradorDeReportes {
+public:
+    void reporte_inventario(GestorDeInventario* inventario) {
+        cout << "Inventario:" << endl;
+        cout << "NOMBRE // PRECIO // CANTIDAD // DESCRIPCION" << endl;
+        inventario->mostrarProducto(inventario->queso);
+        inventario->mostrarProducto(inventario->leche);
+        inventario->mostrarProducto(inventario->papaya);
+    }
+};
+
+int main() {
+
+    string nombre;
+    double precio;
+    int cantidad;
+    string descripcion;
+
+    GestorDeInventario inventario;
+    GeneradorDeReportes reportes;
+
+    while (true) {
+        cout << "\nSeleccione una opcion:" << endl;
+        cout << "1: VENTA" << endl;
+        cout << "2: MANTENIMIENTO" << endl;
+        cout << "3: GENERAR INVENTARIO" << endl;
+        cout << "4: Salir" << endl;
+
+        int opcion;
+        cout << "Ingrese la opcion seleccionada: ";
+        cin >> opcion;
+
+        switch (opcion) {
+            case 1:
+                inventario.comprar();
+                break;
+            case 2:
+                cout << "Ingrese el nombre del producto: ";
+                cin >> nombre;
+                cout << "Ingrese la cantidad a vender: ";
+                cin >> cantidad;
+                cout << "Ingrese el precio del producto: ";
+                cin >> precio;
+                cout << "Ingrese la descripcion del producto: ";
+                cin >> descripcion;
+                inventario.vender(nombre, precio, cantidad, descripcion);
+                break;
+            case 3:
+                reportes.reporte_inventario(&inventario);
+                break;
+            case 4:
+                return 0;
+            default:
+                cout << "Opcion invalida. Intente nuevamente." << endl;
+        }
+    }
+
+    return 0;
+}
+
+
+Ejercicio en Python
+class Producto():
+    def __init__(self, nombre, precio, cantidad, descripcion):
+        self.nombre = nombre
+        self.precio = precio
+        self.cantidad = cantidad
+        self.descripcion = descripcion
+
+class Pedido(Producto):
+    pass
+class GestorDeInventario():
+    def __init__(self):
+        self.inventario = {"queso": Producto("queso", 5, 10, "lacteo"),"leche": Producto("leche", 3, 20, "lacteo"),"papaya": Producto("papaya", 2, 15, "fruta"),}
+    
+    def comprar(self, nombre=None, cantidad=None):
+        if not nombre:
+            print("Lista de productos disponibles:")
+        for producto in self.inventario.values():
+            print(f"NOMBRE: {producto.nombre} //PRECIO: {producto.precio} soles //CANTIDAD: {producto.cantidad} //DESCRIPCION: {producto.descripcion}")
+        nombre = input("Ingrese el nombre del producto que desea comprar: ")
+        cantidad = int(input("Ingrese la cantidad a comprar: "))
+        if nombre in self.inventario:
+            if self.inventario[nombre].cantidad >= cantidad:
+                self.inventario[nombre].cantidad -= cantidad
+                print(f"Se han vendido {cantidad} unidades de {nombre}")
+            else:
+                print(f"No hay suficientes unidades de {nombre} en el inventario")
+                self.comprar()
+        else:
+            print(f"{nombre} no está en el inventario")
+            self.comprar()
+    def vender(self, nombre, precio,cantidad, descripcion):
+        if nombre in self.inventario:
+            self.inventario[nombre].cantidad += cantidad
+            print(f"Se han comprado {cantidad} unidades de {nombre}")
+        else:
+            self.inventario[nombre] = Producto(nombre,precio,cantidad,descripcion)
+            print(f"Se ha añadido {cantidad} unidades de {nombre} al inventario")
+class GeneradorDeReportes():
+    def __init__(self, inventario):
+        self.inventario = inventario
+    def reporte_inventario(self):
+        print("Inventario:")
+        print("\n")
+        print("+--------------------+----------+----------+----------+")
+        print("|NOMBRE |PRECIO |CANTIDAD |DESCRIP |")
+        print("+--------------------+----------+----------+----------+")
+        for producto in self.inventario.values():
+            print("|{:<20}|{:>10.2f}|{:>10.2f}|{:<10}|".format(producto.nombre, producto.precio, producto.cantidad,producto.descripcion))
+        print("+--------------------+----------+----------+----------+") 
+def mostrar_menu(opciones):
+    print('\nSeleccione una opción:')
+    for clave in sorted(opciones):
+        print(f"{clave}: {opciones[clave]}")
+
+def main():
+    inventario = GestorDeInventario()
+    reportes = GeneradorDeReportes(inventario.inventario)
+    opciones = {
+    1: "VENTA",
+    2: "MANTENIMIENTO",
+    3: "GENERAR INVENTARIO",
+    4: "Salir"
+    }
+    print("Bienvenido al sistema de inventario")
+    while True:
+        mostrar_menu(opciones)
+        opcion = input("Ingrese la opcion seleccionada: ")
+        if opcion == "1":
+            inventario.comprar()
+        elif opcion == "2":
+            nombre = input("Ingrese el nombre del producto: ")
+            cantidad = int(input("Ingrese la cantidad a vender: "))
+            precio=int(input("Ingrese el precio del producto: "))
+            descripcion = input("Ingrese la descripcion del producto: ")
+            inventario.vender(nombre, precio, cantidad,descripcion)
+        elif opcion == "3":
+            reportes.reporte_inventario()
+        elif opcion == "4":
+            break
+        else:
+            print("Opción inválida. Intente nuevamente.")
+if __name__ == '__main__':
+    main()
+
+
+
