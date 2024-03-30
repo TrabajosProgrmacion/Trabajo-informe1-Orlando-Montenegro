@@ -1,3 +1,94 @@
+Ejercicio en Python 
+class Producto:
+    def __init__(self, nombre, precio, cantidad, descripcion):
+        self.nombre = nombre
+        self.precio = precio
+        self.cantidad = cantidad
+        self.descripcion = descripcion
+
+class Pedido:
+    pass
+
+class GestorDeInventario:
+    def __init__(self):
+        self.queso = Producto("queso", 5, 10, "lacteo")
+        self.leche = Producto("leche", 3, 20, "lacteo")
+        self.papaya = Producto("papaya", 2, 15, "fruta")
+
+    def comprar(self):
+        print("Lista de productos disponibles:")
+        print("NOMBRE // PRECIO // CANTIDAD // DESCRIPCION")
+        self.mostrar_producto(self.queso)
+        self.mostrar_producto(self.leche)
+        self.mostrar_producto(self.papaya)
+
+        nombre = input("Ingrese el nombre del producto que desea comprar: ")
+        cantidad = int(input("Ingrese la cantidad a comprar: "))
+
+        if nombre == "queso" and self.queso.cantidad >= cantidad:
+            self.queso.cantidad -= cantidad
+            print("Se han vendido", cantidad, "unidades de", nombre)
+        elif nombre == "leche" and self.leche.cantidad >= cantidad:
+            self.leche.cantidad -= cantidad
+            print("Se han vendido", cantidad, "unidades de", nombre)
+        elif nombre == "papaya" and self.papaya.cantidad >= cantidad:
+            self.papaya.cantidad -= cantidad
+            print("Se han vendido", cantidad, "unidades de", nombre)
+        else:
+            print("No hay suficientes unidades de", nombre, "en el inventario")
+
+    def vender(self, nombre, precio, cantidad, descripcion):
+        if nombre == "queso":
+            self.queso.cantidad += cantidad
+            print("Se han comprado", cantidad, "unidades de", nombre)
+        elif nombre == "leche":
+            self.leche.cantidad += cantidad
+            print("Se han comprado", cantidad, "unidades de", nombre)
+        elif nombre == "papaya":
+            self.papaya.cantidad += cantidad
+            print("Se han comprado", cantidad, "unidades de", nombre)
+        else:
+            nuevo_producto = Producto(nombre, precio, cantidad, descripcion)
+            print("Se ha añadido", cantidad, "unidades de", nombre, "al inventario")
+
+    def mostrar_producto(self, producto):
+        print(producto.nombre, "//", producto.precio, "soles //", producto.cantidad, "//", producto.descripcion)
+
+class GeneradorDeReportes:
+    def reporte_inventario(self, inventario):
+        print("Inventario:")
+        print("NOMBRE // PRECIO // CANTIDAD // DESCRIPCION")
+        inventario.mostrar_producto(inventario.queso)
+        inventario.mostrar_producto(inventario.leche)
+        inventario.mostrar_producto(inventario.papaya)
+
+if __name__ == "__main__":
+    inventario = GestorDeInventario()
+    reportes = GeneradorDeReportes()
+
+    while True:
+        print("\nSeleccione una opcion:")
+        print("1: VENTA")
+        print("2: MANTENIMIENTO")
+        print("3: GENERAR INVENTARIO")
+        print("4: Salir")
+
+        opcion = int(input("Ingrese la opción seleccionada: "))
+
+        if opcion == 1:
+            inventario.comprar()
+        elif opcion == 2:
+            nombre = input("Ingrese el nombre del producto: ")
+            cantidad = int(input("Ingrese la cantidad a vender: "))
+            precio = float(input("Ingrese el precio del producto: "))
+            descripcion = input("Ingrese la descripcion del producto: ")
+            inventario.vender(nombre, precio, cantidad, descripcion)
+        elif opcion == 3:
+            reportes.reporte_inventario(inventario)
+        elif opcion == 4:
+            break
+        else:
+            print("Opcion invalida. Intente nuevamente.")
 Ejercicio en C 
 
 #include <iostream>
@@ -137,92 +228,3 @@ int main() {
 
     return 0;
 }
-
-
-Ejercicio en Python
-class Producto():
-    def __init__(self, nombre, precio, cantidad, descripcion):
-        self.nombre = nombre
-        self.precio = precio
-        self.cantidad = cantidad
-        self.descripcion = descripcion
-
-class Pedido(Producto):
-    pass
-class GestorDeInventario():
-    def __init__(self):
-        self.inventario = {"queso": Producto("queso", 5, 10, "lacteo"),"leche": Producto("leche", 3, 20, "lacteo"),"papaya": Producto("papaya", 2, 15, "fruta"),}
-    
-    def comprar(self, nombre=None, cantidad=None):
-        if not nombre:
-            print("Lista de productos disponibles:")
-        for producto in self.inventario.values():
-            print(f"NOMBRE: {producto.nombre} //PRECIO: {producto.precio} soles //CANTIDAD: {producto.cantidad} //DESCRIPCION: {producto.descripcion}")
-        nombre = input("Ingrese el nombre del producto que desea comprar: ")
-        cantidad = int(input("Ingrese la cantidad a comprar: "))
-        if nombre in self.inventario:
-            if self.inventario[nombre].cantidad >= cantidad:
-                self.inventario[nombre].cantidad -= cantidad
-                print(f"Se han vendido {cantidad} unidades de {nombre}")
-            else:
-                print(f"No hay suficientes unidades de {nombre} en el inventario")
-                self.comprar()
-        else:
-            print(f"{nombre} no está en el inventario")
-            self.comprar()
-    def vender(self, nombre, precio,cantidad, descripcion):
-        if nombre in self.inventario:
-            self.inventario[nombre].cantidad += cantidad
-            print(f"Se han comprado {cantidad} unidades de {nombre}")
-        else:
-            self.inventario[nombre] = Producto(nombre,precio,cantidad,descripcion)
-            print(f"Se ha añadido {cantidad} unidades de {nombre} al inventario")
-class GeneradorDeReportes():
-    def __init__(self, inventario):
-        self.inventario = inventario
-    def reporte_inventario(self):
-        print("Inventario:")
-        print("\n")
-        print("+--------------------+----------+----------+----------+")
-        print("|NOMBRE |PRECIO |CANTIDAD |DESCRIP |")
-        print("+--------------------+----------+----------+----------+")
-        for producto in self.inventario.values():
-            print("|{:<20}|{:>10.2f}|{:>10.2f}|{:<10}|".format(producto.nombre, producto.precio, producto.cantidad,producto.descripcion))
-        print("+--------------------+----------+----------+----------+") 
-def mostrar_menu(opciones):
-    print('\nSeleccione una opción:')
-    for clave in sorted(opciones):
-        print(f"{clave}: {opciones[clave]}")
-
-def main():
-    inventario = GestorDeInventario()
-    reportes = GeneradorDeReportes(inventario.inventario)
-    opciones = {
-    1: "VENTA",
-    2: "MANTENIMIENTO",
-    3: "GENERAR INVENTARIO",
-    4: "Salir"
-    }
-    print("Bienvenido al sistema de inventario")
-    while True:
-        mostrar_menu(opciones)
-        opcion = input("Ingrese la opcion seleccionada: ")
-        if opcion == "1":
-            inventario.comprar()
-        elif opcion == "2":
-            nombre = input("Ingrese el nombre del producto: ")
-            cantidad = int(input("Ingrese la cantidad a vender: "))
-            precio=int(input("Ingrese el precio del producto: "))
-            descripcion = input("Ingrese la descripcion del producto: ")
-            inventario.vender(nombre, precio, cantidad,descripcion)
-        elif opcion == "3":
-            reportes.reporte_inventario()
-        elif opcion == "4":
-            break
-        else:
-            print("Opción inválida. Intente nuevamente.")
-if __name__ == '__main__':
-    main()
-
-
-
